@@ -1,0 +1,15 @@
+.con {
+	width: 500px;
+	height: auto;
+	margin: auto auto;
+}
+/*
+body {
+	background-color: black;
+}
+*/
+#svg {
+	background-color: darkseagreen;
+	background: radial-gradient(darkseagreen 0%, black 70%);
+	width: 500px;
+}
