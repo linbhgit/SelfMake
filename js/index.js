@@ -441,7 +441,9 @@ function loadToRose(){
 
 	$('#rose-show-div').css('display', 'block');
 	
-	layer.alert('点击玫瑰，进入爱之章！');
+	layer.alert('点击玫瑰，进入爱之章！',{
+		closeBtn: 0
+	});
 
 	if(isInitRose){
 		$('#rose-show').rose();
@@ -456,7 +458,9 @@ function loadToRose(){
 function loadTo3DRose(){
 	$('#rose-show-3d').css('display', 'block');
 	
-	layer.alert('鼠标移入，绽放玫瑰！');
+	layer.alert('鼠标移入，绽放玫瑰！',{
+		closeBtn: 0
+	});
 	 
 	if(isInit3DRose){
 		reSet3DRoseColor();
