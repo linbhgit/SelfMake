@@ -44,7 +44,6 @@
 </head>
 <body> 
 	<a id="hideEntry" style="color: #5177C0;cursor: pointer;">on</a>
-	
 	<div id="choice-div" style="text-align: center;">
 		<div style="margin-top: 250px;color: white;">
 			<h3 id="choice-text">小陈陈，这将是你人生中一个重要的抉择，准备好了吗？</h3></br>
@@ -90,12 +89,19 @@
 			style="position: absolute; z-index: 10000; top: 10px;right:0px;" onclick="nextToRose3DShowClick()">下一个画面</button>
 	</div>
 	
+	
+	<!--music 咱们结婚吧-->
+	<audio id="rose3D-music" height="100" width="100" >
+        <source src="music/we_marray.mp3" type="audio/mp3" />
+        <embed height="100" width="100" src="music/we_marray.mp3" />
+    </audio>
+    
 	<!-- 玫瑰效果-->
 	<div id="rose-show-div" 
 		style="display:none;z-index: 9999;background: #000000;width:100%;height:100%;position:absolute;top:0px;">
 		<button class="layui-btn layui-btn-radius layui-btn-warm"
 			style="position: absolute; z-index: 10000; top: 10px;left:0px;" onclick="backReChooseClick2()">我需要重选</button>	
-		<canvas id="rose-show" style="margin-left: 350px;"></canvas>
+		<canvas id="rose-show" style="margin-left: 350px;" onclick="goToLoveChapter()"></canvas>
 	</div>
 	
 	
@@ -103,6 +109,7 @@
 	<!-- 玫瑰效果 3d -->
  	<div class="con" id="rose-show-3d" 
  		style="display: none;width:100%;height:100%;background: #000000;position:absolute;top:0px;text-align:center;">
+ 		
  		<button class="layui-btn layui-btn-radius layui-btn-warm"
 			style="position: absolute; z-index: 10000; top: 10px;left:0px;" onclick="backTofireworksClick()">上一个画面</button>
 		
@@ -295,9 +302,18 @@
             </path>
         </svg>
     </div>
-	
-	
-	
+    
+    <div id="chapter-iframe" 
+    	style="display: none;">
+    	<div id="chapter-iframe-title">第一章-相识与相恋之初</div>
+		<button id="chapter-iframe-button-1" class="layui-btn layui-btn-normal layui-btn-sm" onclick="goToChapter1()">第一章</button>
+		<button id="chapter-iframe-button-2" class="layui-btn layui-btn-warm layui-btn-sm" onclick="goToChapter2()">第二章</button>
+		<button id="chapter-iframe-button-3" class="layui-btn layui-btn-danger layui-btn-sm" onclick="goToChapter3()">第三章</button>
+    	<a id="chapter-iframe-close" onclick="closeChapter()">X</a>
+    	<!--<iframe id="love-chapter-iframe" src="chapter1/index.html" width="100%" height="100%" frameborder="0"></iframe>-->	
+    	<iframe id="love-chapter-iframe" src="" width="100%" height="100%" frameborder="0"></iframe>	
+    </div>
+ 
 </body>
 
 <!-- 用于layer弹窗显示的内容 -->
@@ -338,5 +354,7 @@
   	<a class="layui-btn layui-btn-radius layui-btn-primary" id="closeLayerWin">容我想想</a>
   </div>
 </form>
+
+
 
 </html>

@@ -8,12 +8,15 @@ var isSkipHideEntryProcess = true;//是否跳过隐藏入口验证步骤
 
 var isPreventToDebug = false;//是否开启阻止通过浏览器查看源码
 
+var fireworkObj;
 var isInitFirework = true;//是否初始化烟花效果
 
+var roseObj = 0;
 var isInitRose = true;//是否初始化玫瑰效果
 
 var isInit3DRose = true;//是否初始化玫瑰3D效果
 
+var iframeChapter = 1;//第一章节
  
 $(function(){
 	preventToDebug();
@@ -90,6 +93,8 @@ $(function(){
     
     //隐藏入口
     $('#hideEntry').click(function(){
+    	//$('#chapter-iframe').css('display', 'block');
+    	
     	autoInputRightAnswer();
     });
     
@@ -407,17 +412,29 @@ function ajaxToWriteAnswerInput(){
  * 加载烟花效果
  */
 function loadTofireworks(){
+	$('#rose3D-music')[0].play();
 	$('#fireworks-show').css('display', 'block');
 
-	if(isInitFirework){
-		var html = '';
-		html = html + '老婆 爱你哦';
-		$('#fireworks-show-text').empty().html(html);
-		$('#fireworks-show-text').show().arctext({
-			radius:180
-	    });
+	if(isInitFirework || true){//保证只走以下方法
 		
-		$('#fireworks-show').fireworks({ 
+		if(isInitFirework){
+			var html = '';
+			html = html + '老婆 爱你哦';
+			$('#fireworks-show-text').empty().html(html);
+			$('#fireworks-show-text').show().arctext({
+				radius:180
+		    });
+		}
+		
+		 
+ 
+		var fireworkCanvas = $('#fireworks-show').find('canvas'); 
+		if(fireworkCanvas.length>0){//存在canvas
+			fireworkObj.stopfirework();
+			fireworkCanvas.remove();
+		}
+		 
+		fireworkObj = $('#fireworks-show').fireworks({ 
 		  sound: false, // sound effect
 		  opacity: 0.9, 
 		  width: '100%', 
@@ -425,6 +442,8 @@ function loadTofireworks(){
 		});
 		
 		isInitFirework = false;
+	}else{
+		fireworkObj.reStartfirework();//重启烟花效果
 	}
 }
 
@@ -445,8 +464,9 @@ function loadToRose(){
 		closeBtn: 0
 	});
 
-	if(isInitRose){
-		$('#rose-show').rose();
+	if(isInitRose || true){
+		$('#rose-show').clearRose(roseObj);		
+		roseObj = $('#rose-show').rose();
 		isInitRose = false;
 	}
 
@@ -456,8 +476,6 @@ function loadToRose(){
  * 加载玫瑰3D效果
  */
 function loadTo3DRose(){
-	$('#rose-show-3d').css('display', 'block');
-	
 	layer.alert('鼠标移入，绽放玫瑰！',{
 		closeBtn: 0
 	});
@@ -507,6 +525,8 @@ function preventToDebug(){
  */
 function backReChooseClick(){
 	$('#fireworks-show').css('display', 'none');
+	fireworkObj.stopfirework();
+	$('#fireworks-show').find('canvas').remove();
 }
 
 /**
@@ -514,7 +534,12 @@ function backReChooseClick(){
  */
 function nextToRose3DShowClick(){
 	$('#fireworks-show').css('display', 'none');
+	fireworkObj.stopfirework();
+	$('#fireworks-show').find('canvas').remove();
 	
+	//$('#chapter-iframe').css('display', 'block');
+	
+	$('#rose-show-3d').css('display', 'block');
 	loadTo3DRose();
 	
 }
@@ -524,6 +549,9 @@ function nextToRose3DShowClick(){
  */
 function backTofireworksClick(){
 	$('#fireworks-show').css('display', 'block');
+	//fireworkObj.reStartfirework();
+	loadTofireworks();
+	
 	$('#rose-show-3d').css('display', 'none');
 }
 
@@ -533,6 +561,8 @@ function backTofireworksClick(){
 function nextToRoseShowClick(){
 	$('#rose-show-3d').css('display', 'none');
 	
+//	$('#chapter-iframe').css('display', 'block');
+	
 	loadToRose();
 }
 /**
@@ -540,6 +570,7 @@ function nextToRoseShowClick(){
  */
 function backReChooseClick2(){
 	$('#rose-show-div').css('display', 'none');
+	$('#rose-show').clearRose(roseObj);
 }
 
 
@@ -559,4 +590,112 @@ function reSet3DRoseColor(){
 		$(petal2[i] + " stop:eq(0)").css('stop-color', 'rgb(255,182,193)');
 	}
 	
+}
+
+
+/**
+ * 进入爱之章节
+ */
+function goToLoveChapter(){
+	$('#rose-show').clearRose(roseObj);
+	
+	layer.alert('即将进入爱之章节', {
+		closeBtn: 2,
+		area: ['300px', '200px'],
+		move: false,//关闭标题区域可拖拽
+		shade: false,
+		btn: ["迫不及待", "再看看玫瑰"],
+		yes: function(index, layero){
+			$('#rose3D-music')[0].pause();
+			$('#chapter-iframe').css('display', 'block');
+			
+			goToChapter1();//进入第一章
+			
+			layer.close(index);//调用关闭
+		},
+		cancel: function(index, layero){
+			//layer.msg('捕获就是从页面已经存在的元素上，包裹layer的结构', {time: 5000, icon:6});
+			
+			//return false; 开启该代码可禁止点击该按钮关闭
+			
+			layer.close(index);//调用关闭
+		}
+		
+	});
+	
+	//goToiframeByChapter1();
+	//goToChapter1();
+}
+
+/**
+ * 关闭爱之章节
+ */
+function closeChapter(){
+	$('#chapter-iframe').css('display', 'none');
+	
+	//关闭iframe内部音乐
+	if(iframeChapter == 1){
+		window.frames['love-chapter-iframe'].contentDocument.getElementById('chapter-music').pause();
+	}else if(iframeChapter == 2){
+		window.frames['love-chapter-iframe'].contentDocument.getElementById('bgmMusic').pause();
+	}
+	
+}
+
+/**
+ * 第一章iframe
+ */
+function goToiframeByChapter1(){
+	//iframe弹窗
+	var index = layer.open({
+      type: 2,
+      title: '爱之章节',
+      closeBtn: 1,//关闭按钮 1显示 0不显示
+      shadeClose: true,//是否点击遮罩关闭
+      //shade: false,
+      //shade: [0.8, '#393D49'],
+      shade: 0.3,
+      maxmin: false, //开启最大化最小化按钮
+      area: ['893px', '600px'],
+      content: 'chapter1/index.html'
+      //content: ['chapter1/index.html', 'yes'], //iframe的url，no代表不显示滚动条
+      //content: '//fly.layui.com/'	
+	});
+    
+    //只需要加这一句就可以啦
+	layer.full(index);
+}
+
+/**
+ * 第一章
+ */
+function goToChapter1(){
+	iframeChapter = 1;
+
+	//window.location = "chapter1/index.html";
+	$('#chapter-iframe-title').empty().html('第一章-相识与相恋之初');
+	$('#chapter-iframe').find('iframe').attr('src', 'chapter1/index.html');
+	$('#chapter-iframe').find('iframe').focus();//让iframe获取焦点
+}
+/**
+ * 第二章
+ */
+function goToChapter2(){
+	iframeChapter = 2;
+	
+	//window.location = "chapter1/index.html";
+	$('#chapter-iframe-title').empty().html('第二章-回忆与憧憬');
+	$('#chapter-iframe').find('iframe').attr('src', 'chapter2/index.html');
+	$('#chapter-iframe').find('iframe').focus();//让iframe获取焦点
+}
+/**
+ * 第三章
+ */
+function goToChapter3(){
+	iframeChapter = 3;
+
+	//window.location = "chapter1/index.html";
+	$('#chapter-iframe-title').empty().html('第三章-我的老婆');
+	$('#chapter-iframe').find('iframe').attr('src', 'chapter3/index.html');
+	$('#chapter-iframe').find('iframe').focus();//让iframe获取焦点
 }

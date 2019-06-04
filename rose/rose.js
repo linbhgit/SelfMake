@@ -1,5 +1,17 @@
 
 (function ($) {
+//	var timer_rose = 0;
+	
+	$.fn.clearRose = function(timer_rose){
+//		debugger;
+		if(timer_rose>0 || timer_rose){
+			window.clearInterval(timer_rose);
+			
+			$(this)[0].getContext('2d').clearRect(0,0,0,0);//清空画布
+//			debugger;
+		}
+	}
+	
 	$.fn.rose = function(options) {
 		var options = options || {};
 		
@@ -76,7 +88,7 @@
 		}
 		
 		
-		setInterval(function(){
+		var timer_rose = setInterval(function(){
 			for (i = 0; i < 1e4; i++){
 				if (s = p(R(), R(), i % 46 / .74)) {
 				    z = s[2];
@@ -95,6 +107,14 @@
 			} 
 		}, 0);
  
+ 		
+// 		this.clearRose = function(){
+// 			if(timer_rose>0 || timer_rose){
+// 				window.clearInterval(timer_rose);
+// 			}
+// 		}
+
+		return timer_rose;
  		 
 	}
 
